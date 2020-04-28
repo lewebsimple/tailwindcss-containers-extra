@@ -2,8 +2,8 @@ const plugin = require('tailwindcss/plugin');
 const _ = require('lodash');
 const strip = require('css-strip-units');
 
-module.exports = plugin(function ({ addComponents, theme }) {
-  const screens = theme('screens', {});
+module.exports = plugin(function ({ addUtilities, theme }) {
+  const screens = theme('halfContainer.screens', theme('screens'));
   const mediaQueries = _.map(screens, width => {
     const unit = strip(width);
     return {
@@ -14,8 +14,13 @@ module.exports = plugin(function ({ addComponents, theme }) {
       },
     };
   });
-  addComponents([
-    { '.container': { width: '100%' } },
+  addUtilities([
     ...mediaQueries,
   ]);
+}, {
+  theme: {
+    halfContainer: theme => ({
+      screens: theme.screens
+    }),
+  },
 });
